@@ -1,4 +1,4 @@
-## Deployment recipes
+## Méthodes de déploiement
 
 There are multiple ways to deploy web2py in a production environment. The details depend on the configuration and the services provided by the host.
 
