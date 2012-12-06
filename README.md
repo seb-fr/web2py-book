@@ -10,7 +10,7 @@ The gitbub repo includes code and sources. The book sources are in the sources f
 
 Install GIT with
 
-    git clone https://github.com/mdipierro/web2py-book.git
+    git clone https://github.com/DonaldClermont/web2py-book.git
 
 Check what has changed since verison 4 of the book:
 
