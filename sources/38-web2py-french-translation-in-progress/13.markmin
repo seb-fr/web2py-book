@@ -1,31 +1,31 @@
 ## Méthodes de déploiement
 
-There are multiple ways to deploy web2py in a production environment. The details depend on the configuration and the services provided by the host.
+il existe plusieurs méthodes pour déployer web2py dans un environnement de production. Les détails dépendent de la configuration et des services fournis par le serveur. 
 
-In this chapter we consider the following issues:
-- Production deployment (Apache, Lighttpd, Cherokee)
-- Security
-- Scalability
-- Deployment on the Google App Engine platform(GAE``gae``:cite )
+Dans ce chapitre, nous allons considérer les problématiques suivantes: 
+- Déploiement en production (Apache, Lighttpd, Cherokee)
+- Sécurité
+- Adaptabilité
+- Déploiement sur la plateforme Google App Engine(GAE``gae``:cite )
 
 ``Apache``:inxx ``CGI``:inxx ``mod_python``:inxx ``mod_wsgi``:inxx ``mod_proxy``:inxx
 ``WSGI``:inxx
 
-web2py comes with an SSL``ssl``:cite  enabled web server, the Rocket wsgiserver``rocket``:cite . While this is a fast web server, it has limited configuration capabilities. For this reason it is best to deploy web2py behind Apache``apache``:cite , Lighttpd``lighttpd``:cite  or Cherokee``cherokee``:cite . These are free and open-source web servers that are customizable and have been proven to be reliable in high traffic production environments. They can be configured to serve static files directly, deal with HTTPS, and pass control to web2py for dynamic content.
+web2py fournit un serveur web SSL``ssl``:cite  activé, le Rocket wsgiserver``rocket``:cite . Bien que ce soit un serveur web rapide, ses capacités de configuration sont limitées. Pour cette raison, il est conseillé de déployer web2py sur Apache``apache``:cite , Lighttpd``lighttpd``:cite  ou Cherokee``cherokee``:cite . Il existe des serveurs web gratuits et open-source qui sont personnalisables et qui ont montré leur fiabilité dans des environnements de production à fort traffic. Ils peuvent être configurés pour fournir des fichiers statiques directement, se charger de HTTPS, et donner le contrôle à web2py pour le contenu dynamique. 
 
-Until a few years ago, the standard interface for communication between web servers and web applications was the Common Gateway Interface (CGI)``cgi``:cite . The main problem with CGI is that it creates a new process for each HTTP request. If the web application is written in an interpreted language, each HTTP request served by the CGI scripts starts a new instance of the interpreter. This is slow, and it should be avoided in a production environment. Moreover, CGI can only handle simple responses. It cannot handle, for example, file streaming.
+Jusqu'à il y a quelques années, l'interface standard de communication entre les serveurs web et les applications web était the Common Gateway Interface (CGI)``cgi``:cite . Le principal problème avec CGI est qu'elle crée un nouveau process pour chaque requète HTTP. Si l'application web est écrite dans un langage interprété, chaque requète HTTP servie par les scripts CGI démarre un nouvelle instance de l'interpreteur. C'est lent, et cela devrait être avité dans un environnement de production. De plus, CGI ne peut traiter que des réponses simples. Elle ne peut traiter, par exemple, du streaming de fichier.
 
-web2py provides a file ``cgihandler.py`` to interface to CGI.
+web2py fournit un fichier ``cgihandler.py`` pour s'interfacer avec CGI.
 
-One solution to this problem is to use the mod_python module for Apache. We discuss it here because its use is still very common, though the mod_python project has officially been abandoned by the Apache Software Foundation. mod_python starts one instance of the Python interpreter when Apache starts, and serves each HTTP request in its own thread without having to restart Python each time. This is a better solution than CGI, but it is not an optimal solution, since mod_python uses its own interface for communication between the web server and the web application. In mod_python, all hosted applications run under the same user-id/group-id, which presents security issues.
+Une solution à ce problème est d'utiliser le module mod_python pour Apache.  Nous l'évoquons ici car il est encore très utilisé, bien que le projet mod_python ait été officiellement abandonné par la fondation Apache Software. mod_python démarre une instance de l'interpréteur Python au démarrage d'Apache, et répond à chaque requête HTTP dans son propre thread sans devoir redémarrer python à chaque fois. C'est une meilleure solution que CGI, mais ce n'est pas une solution optimale, puisque mod_python utilise sa propre interface de communication entre le serveur web et l'application web. Dans mod_python, toutes les applications hébergées s'exécutent sur le même user-id/group-id, ce qui pose des problèmes de sécurité.
 
-web2py provides a file ``modpythonhandler.py`` to interface to mod_python.
+web2py fournit un fichier ``modpythonhandler.py`` pour s'interfacer avec mod_python.
 
-In the last few years, the Python community has come together behind a new standard interface for communication between web servers and web applications written in Python. It is called Web Server Gateway Interface (WSGI)``wsgi:w``:cite ``wsgi:o``:cite . web2py was built on WSGI, and it provides handlers for using other interfaces when WSGI is not available.
+Ces dernières années, la communauté Python s'est réuni derriere une nouvelle interface standard de communication entre les serveurs web et les applications web écrites en python. elle est appelée Web Server Gateway Interface (WSGI)``wsgi:w``:cite ``wsgi:o``:cite . web2py a été construit sur WSGI, et il fournit des gestionnaires pour utiliser d'autres interfaces lorsque WSGI n'est pas disponible.
 
-Apache supports WSGI via the module mod_wsgi``modwsgi``:cite  developed by Graham Dumpleton.
+Apache supporte WSGI grâce au module mod_wsgi``modwsgi``:cite  développé par Graham Dumpleton.
 
-web2py provides a file ``wsgihandler.py`` to interface to WSGI.
+web2py fournit un fichier ``wsgihandler.py`` pour s'interfacer avec WSGI.
 
 Some web hosting services do not support mod_wsgi. In this case, we must use Apache as a proxy and forward all incoming requests to the web2py built-in web server (running for example on localhost:8000).
 
